@@ -1,14 +1,23 @@
+# Core Dashboard Framework
 streamlit==1.28.1
+
+# Data Processing
 pandas==2.0.3
 numpy==1.24.3
+
+# Visualization Libraries
 plotly==5.17.0
-openpyxl==3.1.2
-requests==2.31.0
-geopandas==0.13.0
+
+# Geographic/Mapping
 folium==0.14.0
 streamlit-folium==0.15.0
-scikit-learn==1.3.0
-scipy==1.11.0
 pydeck==0.8.0
+
+# Additional Visualization
 altair==5.0.1
-plotly-orca==3.4.2
+
+# Statistical Analysis
+scipy==1.11.3
+
+# Utilities
+requests==2.31.0
