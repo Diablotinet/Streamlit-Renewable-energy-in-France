@@ -832,9 +832,35 @@ def create_3d_globe_map(df_filtered, year_selection=None):
 @st.cache_data
 def create_sunburst_chart(df_filtered):
     """Create hierarchical sunburst chart of energy production."""
+    # Check if data is empty or all zeros
+    if df_filtered.empty or df_filtered['production_mwh'].sum() == 0:
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No data available for the selected filters",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16)
+        )
+        fig.update_layout(height=600)
+        return fig
+    
     agg_data = df_filtered.groupby(['energy_type', 'region']).agg({
         'production_mwh': 'sum'
     }).reset_index()
+    
+    # Remove rows with zero production
+    agg_data = agg_data[agg_data['production_mwh'] > 0]
+    
+    if agg_data.empty:
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No production data available",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16)
+        )
+        fig.update_layout(height=600)
+        return fig
     
     # Create hierarchical structure: Root -> Energy Types -> Regions
     root_label = 'Total Energy'
@@ -1428,9 +1454,35 @@ def create_heatmap_timeline(df_filtered):
 @st.cache_data
 def create_sunburst_by_year(df_filtered):
     """Create hierarchical sunburst drill-down by year."""
+    # Check if data is empty or all zeros
+    if df_filtered.empty or df_filtered['production_mwh'].sum() == 0:
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No data available for the selected filters",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16)
+        )
+        fig.update_layout(height=600)
+        return fig
+    
     year_data = df_filtered.groupby(['year', 'energy_type', 'region']).agg({
         'production_mwh': 'sum'
     }).reset_index()
+    
+    # Remove rows with zero production
+    year_data = year_data[year_data['production_mwh'] > 0]
+    
+    if year_data.empty:
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No production data available",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16)
+        )
+        fig.update_layout(height=600)
+        return fig
     
     fig = px.sunburst(
         year_data,
